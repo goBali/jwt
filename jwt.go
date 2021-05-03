@@ -19,7 +19,7 @@ import (
 // The secret key variable is used to hash the Header and Payload and store the value into the Signature
 // The Secret Key amd Expirty Time are exportable and can be set by the initiating process
 var (
-	SecretKey string = "@2Aa"
+	//	SecretKey string = "@2Aa"
 	//	ExpiryTime  time.Duration = 5
 	PayLoadData PayLoad
 )
@@ -32,6 +32,7 @@ type PayLoad struct {
 	Expiry    int64
 	Name      string
 	Email     string
+	Role      string
 	MobileNbr string
 	IpAddress string
 }
@@ -58,7 +59,7 @@ func base64Decode(src string) (string, error) {
 
 // Generates a JWT made up of header, payload and signature and returns the JWT.
 // The signature is the hash of the header & payload.
-func MakeJwt(expiryTime time.Duration, payload PayLoad) string {
+func MakeJwt(expiryTime time.Duration, payload PayLoad, secretKey string) string {
 
 	type Header struct {
 		Alg string `json:"alg"`
@@ -84,7 +85,7 @@ func MakeJwt(expiryTime time.Duration, payload PayLoad) string {
 	encodedPayload, _ := json.Marshal(payload)
 	signatureValue := header64 + "." + base64Encode(string(encodedPayload))
 
-	return signatureValue + "." + makeHash(signatureValue, SecretKey)
+	return signatureValue + "." + makeHash(signatureValue, secretKey)
 }
 
 // Checks if JWT provided is valid
