@@ -6,12 +6,13 @@ To use the JWT, you must create a payload with the following struct
 
 type PayLoad struct {
 	Name      string
+	Role	  string
 	Email     string
 	MobileNbr string
 	IpAddress string
 }
 
-All the above fields are optional and you can add more fields. 
+All the above fields are optional. 
 
 MakeJwt
 -------
@@ -31,8 +32,30 @@ The following parameters are required:
 Jwt (the JWT you have received),
 SecretKey  (only you know and you have used in MakeJwt)
 
-The fucntion will retur an error for an invalid validation and a clear payload for valid validation.  
+The function will return an error for an invalid validation and a clear payload for valid validation.  
 
+Example Code:
+----------------------------------------------------------------------------------------------
+package main
+
+import (
+	"fmt"
+	"github.com/goBali/jwt"
+)
+
+func main() {
+
+	jwtString := jwt.MakeJwt(10, jwt.PayLoad{Name: "Test", Role: "Admin"}, "123456")
+
+	payLoad, err := jwt.ValidateJwt(jwtString, "123456")
+	if err != nil {
+		fmt.Printf("Validation Failed : %s", err)
+	}
+
+	fmt.Printf("User Name: %s, Role : %s", payLoad.Name, payLoad.Role)
+}
+
+----------------------------------------------------------------------------------------------------------------
 Cheers
 See you soon in Bali
 
